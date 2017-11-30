@@ -3,6 +3,7 @@ purrr::A_Primer
 author: Karl Hailperin
 date: November 30, 2017
 autosize: true
+### https://github.com/khailper/purrr_pres
 
 What is purrr?
 ========================================================
@@ -170,10 +171,10 @@ pmap(list(observations,sizes, probabilities), rbinom)
 [1] 4
 
 [[2]]
-[1] 5 6
+[1] 4 4
 
 [[3]]
-[1] 6 5 5
+[1] 6 4 5
 ```
 
 The map() Family, Part 7: invoke_map()
@@ -190,10 +191,10 @@ invoke_map(function_list, sample_size)
 
 ```
 [[1]]
-[1] -2.1096772  0.7211880 -0.1027006  0.6314580  0.8265994
+[1]  0.9311378 -0.5683189 -1.0530441  0.1370340  0.8697368
 
 [[2]]
-[1] 0.4221938 0.3099562 0.2158093 0.1761680 0.6374015
+[1] 0.59892808 0.52088840 0.59509439 0.09486915 0.23568217
 ```
 
 The map() Family, Part 8: walk()
