@@ -810,7 +810,7 @@ hljs.initHighlightingOnLoad();
 
 <p class="fragment">This:</p>
 
-<pre class="fragment"><code class="r">x &lt;- c(1,2,3,4,5)
+<pre class="fragment"><code class="r">x &lt;- 1:5
 sum &lt;- 0
 for (i in seq(length(x))){
         sum &lt;- sum + x[i]
@@ -823,7 +823,7 @@ sum/length(x)
 
 <p class="fragment">Or this:</p>
 
-<pre class="fragment"><code class="r">x &lt;- c(1,2,3,4,5)
+<pre class="fragment"><code class="r">x &lt;- 1:5
 mean(x)
 </code></pre>
 
@@ -837,23 +837,23 @@ mean(x)
 <h3>The map() Family, Part 1: The basics</h3>
 <div class="slideContent" >
 <ul>
-<li class="fragment">Basic form: map(.x,.f, &hellip;)</li>
-<li class="fragment">Creates results like this:</li>
+<li>Basic form: map(.x, .f, &hellip;)</li>
+<li>Creates results like this:</li>
 </ul>
 
-<pre class="fragment"><code>results = vector(&quot;list&quot;, length(.x))
+<pre><code>results = vector(&quot;list&quot;, length(.x))
 for (i in seq(length(.x))){
         results[i] &lt;- .f(.x[i], ...)
 }
 results
 </code></pre>
 
-<pre class="fragment"><code class="r">library(purrr)
-numbers &lt;- c(1,2,3)
+<pre><code class="r">library(purrr)
+numbers &lt;- 1:3
 map(numbers, sqrt)
 </code></pre>
 
-<pre class="fragment"><code>[[1]]
+<pre><code>[[1]]
 [1] 1
 
 [[2]]
@@ -872,7 +872,7 @@ map(numbers, sqrt)
 <ul>
 <li>Returns a list by default, but the map_* family returns a vector</li>
 <li>For example, map_chr returns a character vector</li>
-<li>Other suffixes are lgl, int, dbl, dfr, dfc</li>
+<li>Other suffixes include lgl, int, dbl</li>
 </ul>
 
 <pre><code class="r">map_dbl(numbers, sqrt)
@@ -892,7 +892,9 @@ map(numbers, sqrt)
 <li>If the nested lists are named, you can string inputs to get that input</li>
 </ul>
 
-<pre><code class="r">people &lt;- list(c(&quot;first name&quot; = &quot;Kristen&quot;, &quot;last name&quot; = &quot;Bell&quot;), c(&quot;first name&quot; = &quot;Ted&quot;, &quot;last name&quot; = &quot;Danson&quot;), c(&quot;first name&quot; = &quot;William&quot;, &quot;middle name&quot; = &quot;Jackson&quot;, &quot;last name&quot; = &quot;Harper&quot;))
+<pre><code class="r">people &lt;- list(c(first_name = &quot;Kristen&quot;, last_name = &quot;Bell&quot;), 
+               c(first_name = &quot;Ted&quot;, last_name = &quot;Danson&quot;), 
+               c(first_name = &quot;William&quot;, middle_name = &quot;Jackson&quot;, last_name = &quot;Harper&quot;))
 
 map_chr(people, 2)
 </code></pre>
@@ -900,13 +902,13 @@ map_chr(people, 2)
 <pre><code>[1] &quot;Bell&quot;    &quot;Danson&quot;  &quot;Jackson&quot;
 </code></pre>
 
-<pre><code class="r">map_chr(people, &quot;last name&quot;)
+<pre><code class="r">map_chr(people, &quot;last_name&quot;)
 </code></pre>
 
 <pre><code>[1] &quot;Bell&quot;   &quot;Danson&quot; &quot;Harper&quot;
 </code></pre>
 
-<pre><code class="r"># map_chr(people, 3) # returns error
+<pre><code class="r"># map_chr(people, 3) returns error
 map_chr(people, 3, .default = NA)
 </code></pre>
 
@@ -924,10 +926,8 @@ map_chr(people, 3, .default = NA)
 </ul>
 
 <pre><code class="r">plots &lt;- list(&quot;Plot 1&quot; = plot_1, &quot;Plot 2&quot; = plot_2, &quot;Plot 3&quot; = plot_3)
-plot_paths &lt;- map_chr(plots, ~ paste0(&quot;Plots/&quot;, names(.x), &quot;.png&quot;))
+plot_paths &lt;- map_chr(plots, ~ paste0(&quot;Plots/&quot;, names(.), &quot;.png&quot;))
 </code></pre>
-
-<p>Note: You can use map() in the anonymous function to create a nested for loop (thanks to <a href="https://twitter.com/sharon000/status/900400803172814849">Sharon Machlis</a> for pointing this out)</p>
 
 </div>
 
@@ -958,6 +958,7 @@ map2_chr(vector_1, vector_2, paste, sep = &quot; and &quot;)
 <ul>
 <li>Instead of creating abitrarily many map<a href="">number</a> functions, purrr has pwalk(.l, .f, &hellip;)</li>
 <li>.l is a list of lists</li>
+<li>There are pmap_[type] functions</li>
 </ul>
 
 <pre><code class="r">observations &lt;- 1:3
@@ -967,13 +968,13 @@ pmap(list(observations,sizes, probabilities), rbinom)
 </code></pre>
 
 <pre><code>[[1]]
-[1] 3
+[1] 4
 
 [[2]]
-[1] 4 4
+[1] 5 6
 
 [[3]]
-[1] 4 4 5
+[1] 6 5 5
 </code></pre>
 
 </div>
@@ -983,8 +984,8 @@ pmap(list(observations,sizes, probabilities), rbinom)
 <h3>The map() Family, Part 7: invoke_map()</h3>
 <div class="slideContent" >
 <ul>
-<li>invoke_map() is map in reverse, constant input, list of functions</li>
-<li>There are pmap_[type] functions</li>
+<li>invoke_map(.f, .x, &hellip;) is map in reverse, constant input, list of functions</li>
+<li>There are invoke<em>map</em>[type] functions</li>
 </ul>
 
 <pre><code class="r">sample_size &lt;- 5
@@ -993,10 +994,10 @@ invoke_map(function_list, sample_size)
 </code></pre>
 
 <pre><code>[[1]]
-[1] -2.0058734  1.7864206  0.5293020 -0.7553341 -1.2162163
+[1] -2.1096772  0.7211880 -0.1027006  0.6314580  0.8265994
 
 [[2]]
-[1] 0.427320862 0.311096732 0.725950402 0.039297120 0.005404793
+[1] 0.4221938 0.3099562 0.2158093 0.1761680 0.6374015
 </code></pre>
 
 </div>
@@ -1010,6 +1011,137 @@ invoke_map(function_list, sample_size)
 </ul>
 
 <pre><code class="r">walk2(plot_paths, plots, ggsave)
+</code></pre>
+
+</div>
+
+</section>
+<section data-transition="linear" data-transition-speed="default">
+<h3>The map() Family, Part 9: modify()</h3>
+<div class="slideContent" >
+<ul>
+<li>modify(.x , .f, &hellip;) is like map, but it always returns an object of the same type as .x</li>
+</ul>
+
+<pre><code class="r">example_df &lt;- data.frame(x = 1:3, y = 4:6, z = 7:9)
+map(example_df, log)
+</code></pre>
+
+<pre><code>$x
+[1] 0.0000000 0.6931472 1.0986123
+
+$y
+[1] 1.386294 1.609438 1.791759
+
+$z
+[1] 1.945910 2.079442 2.197225
+</code></pre>
+
+<pre><code class="r">modify(example_df, log)
+</code></pre>
+
+<pre><code>          x        y        z
+1 0.0000000 1.386294 1.945910
+2 0.6931472 1.609438 2.079442
+3 1.0986123 1.791759 2.197225
+</code></pre>
+
+</div>
+
+</section>
+<section data-transition="linear" data-transition-speed="default">
+<h3>The map() Family, Part 10: modify_if&#x2F;at()</h3>
+<div class="slideContent" >
+<ul>
+<li>modify_if(.x, .p, .f, &hellip;) applies .f where .p is TRUE, and leavesit alone otherwise</li>
+<li>modify_at(.x, .at, .f, &hellip;) is like modify_if, but .at is character or numeric vector indicating which positions to evaluate .f at</li>
+</ul>
+
+<pre><code class="r">modify_if(1:7,  ~ . %% 2  == 0, log) %&gt;% simplify()
+</code></pre>
+
+<pre><code>[1] 1.0000000 0.6931472 3.0000000 1.3862944 5.0000000 1.7917595 7.0000000
+</code></pre>
+
+<pre><code class="r">modify_at(example_df, &quot;x&quot;, log)
+</code></pre>
+
+<pre><code>          x y z
+1 0.0000000 4 7
+2 0.6931472 5 8
+3 1.0986123 6 9
+</code></pre>
+
+</div>
+
+</section>
+<section data-transition="linear" data-transition-speed="default">
+<h3>The map() Family, Part 11a: modify_depth()</h3>
+<div class="slideContent" >
+<ul>
+<li>modify_depth(.x, .depth, .f, &hellip;) is for mapping over elements buried in a nested list</li>
+<li>.depth = 0 is the list itself</li>
+<li>.depth = 1 is the elements of the list (modify_depth(.x, 1, .f is the same as map(.x, ,f)))</li>
+<li>.depth = 2 is the elements of those lists (assuming .x is a list of  lists)</li>
+</ul>
+
+<pre><code class="r">casts &lt;- list(
+        the_good_place = people,
+        crazy_ex_girlriend = list(c(first_name = &quot;Rachel&quot;, last_name = &quot;Bloom&quot;), 
+                                       c(first_name = &quot;Vincent&quot;, last_name = &quot;Rodriguez&quot;), 
+                                       c(first_name = &quot;Donna&quot;, middle_name = &quot;Lynne&quot;, last_name = &quot;Champlin&quot;))
+)
+</code></pre>
+
+</div>
+
+</section>
+<section data-transition="linear" data-transition-speed="default">
+<h3>The map() Family, Part 11b: modify_depth()</h3>
+<div class="slideContent" >
+<pre><code class="r">map(casts, toupper)
+</code></pre>
+
+<pre><code>$the_good_place
+[1] &quot;C(\&quot;KRISTEN\&quot;, \&quot;BELL\&quot;)&quot;               
+[2] &quot;C(\&quot;TED\&quot;, \&quot;DANSON\&quot;)&quot;                 
+[3] &quot;C(\&quot;WILLIAM\&quot;, \&quot;JACKSON\&quot;, \&quot;HARPER\&quot;)&quot;
+
+$crazy_ex_girlriend
+[1] &quot;C(\&quot;RACHEL\&quot;, \&quot;BLOOM\&quot;)&quot;             
+[2] &quot;C(\&quot;VINCENT\&quot;, \&quot;RODRIGUEZ\&quot;)&quot;        
+[3] &quot;C(\&quot;DONNA\&quot;, \&quot;LYNNE\&quot;, \&quot;CHAMPLIN\&quot;)&quot;
+</code></pre>
+
+<pre><code class="r">modify_depth(casts, 2, toupper)
+</code></pre>
+
+<pre><code>$the_good_place
+$the_good_place[[1]]
+first_name  last_name 
+ &quot;KRISTEN&quot;     &quot;BELL&quot; 
+
+$the_good_place[[2]]
+first_name  last_name 
+     &quot;TED&quot;   &quot;DANSON&quot; 
+
+$the_good_place[[3]]
+ first_name middle_name   last_name 
+  &quot;WILLIAM&quot;   &quot;JACKSON&quot;    &quot;HARPER&quot; 
+
+
+$crazy_ex_girlriend
+$crazy_ex_girlriend[[1]]
+first_name  last_name 
+  &quot;RACHEL&quot;    &quot;BLOOM&quot; 
+
+$crazy_ex_girlriend[[2]]
+ first_name   last_name 
+  &quot;VINCENT&quot; &quot;RODRIGUEZ&quot; 
+
+$crazy_ex_girlriend[[3]]
+ first_name middle_name   last_name 
+    &quot;DONNA&quot;     &quot;LYNNE&quot;  &quot;CHAMPLIN&quot; 
 </code></pre>
 
 </div>
@@ -1089,10 +1221,10 @@ $error
 <pre><code class="r">transpose(people) %&gt;% simplify_all()
 </code></pre>
 
-<pre><code>$`first name`
+<pre><code>$first_name
 [1] &quot;Kristen&quot; &quot;Ted&quot;     &quot;William&quot;
 
-$`last name`
+$last_name
 [1] &quot;Bell&quot;   &quot;Danson&quot; &quot;Harper&quot;
 </code></pre>
 
