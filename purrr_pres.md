@@ -132,8 +132,8 @@ The map() Family, Part 4: anonymous functions
 
 
 ```r
-plots <- list("Plot 1" = plot_1, "Plot 2" = plot_2, "Plot 3" = plot_3)
-plot_paths <- map_chr(plots, ~ paste0("Plots/", names(.), ".png"))
+plots <- list(Plot_1 = plot_1, Plot_2 = plot_2, Plot_3 = plot_3)
+plot_paths <- map_chr(names(plots), ~ paste0("Plots/", ., ".png"))
 ```
 
 
@@ -168,13 +168,13 @@ pmap(list(observations,sizes, probabilities), rbinom)
 
 ```
 [[1]]
-[1] 4
+[1] 3
 
 [[2]]
-[1] 4 4
+[1] 3 4
 
 [[3]]
-[1] 6 4 5
+[1] 5 6 5
 ```
 
 The map() Family, Part 7: invoke_map()
@@ -191,10 +191,10 @@ invoke_map(function_list, sample_size)
 
 ```
 [[1]]
-[1]  0.9311378 -0.5683189 -1.0530441  0.1370340  0.8697368
+[1]  0.3453109 -1.5292692  1.3365369  0.9855733 -1.1834171
 
 [[2]]
-[1] 0.59892808 0.52088840 0.59509439 0.09486915 0.23568217
+[1] 0.3205246 0.5900417 0.2996355 0.3945613 0.1853336
 ```
 
 The map() Family, Part 8: walk()
