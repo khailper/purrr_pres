@@ -140,33 +140,6 @@ walk2(plot_paths, plots, ggsave)
 ```
 
 ---
-# The map() Family, Part 8a: modify_depth()
-
-- modify_depth(.x, .depth, .f, ...) is for mapping over elements buried in a nested list
-- .depth = 0 is the list itself
-- .depth = 1 is the elements of the list (modify_depth(.x, 1, .f is the same as map(.x, ,f)))
-- .depth = 2 is the elements of those lists (assuming .x is a list of  lists)
-
-```{r map_example_11a}
-casts <- list(
-        the_good_place = people,
-        crazy_ex_girlriend = list(c(first_name = "Rachel", last_name = "Bloom"), 
-                                       c(first_name = "Vincent", last_name = "Rodriguez"), 
-                                       c(first_name = "Donna", middle_name = "Lynne", last_name = "Champlin"))
-)
-```
-
-
----
-#The map() Family, Part 8b: modify_depth()
-
-```{r map_example_11b}
-map(casts, toupper)
-modify_depth(casts, 2, toupper)
-```
-
-
----
 # reduce()
 
 - reduce(.x, .f) uses .f to reduce .x to one element, starting with the first 2, than the output and the third,etc.
