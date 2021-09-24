@@ -171,10 +171,10 @@ pmap(list(observations,sizes, probabilities), rbinom)
 [1] 3
 
 [[2]]
-[1] 3 4
+[1] 4 5
 
 [[3]]
-[1] 5 6 5
+[1] 3 5 6
 ```
 
 The map() Family, Part 7: invoke_map()
@@ -191,10 +191,10 @@ invoke_map(function_list, sample_size)
 
 ```
 [[1]]
-[1]  0.3453109 -1.5292692  1.3365369  0.9855733 -1.1834171
+[1] -0.7606657 -0.5510715 -0.7123391  0.0662748 -0.2277455
 
 [[2]]
-[1] 0.3205246 0.5900417 0.2996355 0.3945613 0.1853336
+[1] 0.42801122 0.17679530 0.52070898 0.03660668 0.68454829
 ```
 
 The map() Family, Part 8: walk()
@@ -245,167 +245,25 @@ The map() Family, Part 10: modify_if/at()
 - modify_at(.x, .at, .f, ...) is like modify_if, but .at is character or numeric vector indicating which positions to evaluate .f at
 
 
-```r
-modify_if(1:7,  ~ . %% 2  == 0, log) %>% simplify()
-```
-
-```
-[1] 1.0000000 0.6931472 3.0000000 1.3862944 5.0000000 1.7917595 7.0000000
-```
-
-```r
-modify_at(example_df, "x", log)
-```
-
-```
-          x y z
-1 0.0000000 4 7
-2 0.6931472 5 8
-3 1.0986123 6 9
-```
-
-The map() Family, Part 11a: modify_depth()
-========================================================
-- modify_depth(.x, .depth, .f, ...) is for mapping over elements buried in a nested list
-- .depth = 0 is the list itself
-- .depth = 1 is the elements of the list (modify_depth(.x, 1, .f is the same as map(.x, ,f)))
-- .depth = 2 is the elements of those lists (assuming .x is a list of  lists)
 
 
-```r
-casts <- list(
-        the_good_place = people,
-        crazy_ex_girlriend = list(c(first_name = "Rachel", last_name = "Bloom"), 
-                                       c(first_name = "Vincent", last_name = "Rodriguez"), 
-                                       c(first_name = "Donna", middle_name = "Lynne", last_name = "Champlin"))
-)
-```
-
-The map() Family, Part 11b: modify_depth()
-========================================================
 
 
-```r
-map(casts, toupper)
-```
+
+
+
+
+
+
+
 
 ```
-$the_good_place
-[1] "C(\"KRISTEN\", \"BELL\")"               
-[2] "C(\"TED\", \"DANSON\")"                 
-[3] "C(\"WILLIAM\", \"JACKSON\", \"HARPER\")"
+Warning message:
+package 'knitr' was built under R version 4.1.1 
 
-$crazy_ex_girlriend
-[1] "C(\"RACHEL\", \"BLOOM\")"             
-[2] "C(\"VINCENT\", \"RODRIGUEZ\")"        
-[3] "C(\"DONNA\", \"LYNNE\", \"CHAMPLIN\")"
+
+processing file: purrr_pres.Rpres
+Quitting from lines 151-153 (purrr_pres.Rpres) 
+Error: Can't coerce element 1 from a double to a integer
+Execution halted
 ```
-
-```r
-modify_depth(casts, 2, toupper)
-```
-
-```
-$the_good_place
-$the_good_place[[1]]
-first_name  last_name 
- "KRISTEN"     "BELL" 
-
-$the_good_place[[2]]
-first_name  last_name 
-     "TED"   "DANSON" 
-
-$the_good_place[[3]]
- first_name middle_name   last_name 
-  "WILLIAM"   "JACKSON"    "HARPER" 
-
-
-$crazy_ex_girlriend
-$crazy_ex_girlriend[[1]]
-first_name  last_name 
-  "RACHEL"    "BLOOM" 
-
-$crazy_ex_girlriend[[2]]
- first_name   last_name 
-  "VINCENT" "RODRIGUEZ" 
-
-$crazy_ex_girlriend[[3]]
- first_name middle_name   last_name 
-    "DONNA"     "LYNNE"  "CHAMPLIN" 
-```
-
-reduce()
-========================================================
-- reduce(.x, .f) uses .f to reduce .x to one element, starting with the first 2, than the output and the third,etc.
-- If x is a 3-element list/vector, `map(x,f) = f(f(x1,x2),x3)`
-- Example: `x = c(1,2,3)`, ``map(x, `+`) = (1 +2) + 3``
-- Like map, reduce also has a reduce_2 version
-- reduce_right() works like reduce, but from the right
-- accumulate(): like reduce(), but returns a vector with all the intermediate values in addition to the final one
-    + Example: `x = c(1,2,3)`, ``accumulate(x, `+`)`` returns 1, 3, 6
-    + While there's an accumulate_right(), there's no accumulate2()
-    
-
-```r
-one_to_hundred <- 1:100
-reduce(one_to_hundred, `+`)
-```
-
-```
-[1] 5050
-```
-
-safely()
-========================================================
-- safely(.f) returns a version of .f that handles errors well
-
-```r
-safe_sqrt <- safely(sqrt)
-safe_sqrt(4)
-```
-
-```
-$result
-[1] 2
-
-$error
-NULL
-```
-
-```r
-safe_sqrt("a")
-```
-
-```
-$result
-NULL
-
-$error
-<simpleError in sqrt(x = x): non-numeric argument to mathematical function>
-```
-
-- Don't like NULL? Use the otherwise argument.
-- .f can use ~ notation.
-
-transpose()
-========================================================
-- Turns lists inside out
-- Note: unless you use the option .names parameter, transpose looks at first item to determine names
-
-```r
-transpose(people) %>% simplify_all()
-```
-
-```
-$first_name
-[1] "Kristen" "Ted"     "William"
-
-$last_name
-[1] "Bell"   "Danson" "Harper"
-```
-
-Other Resources Because You Found This Talk Unhelpful
-========================================================
-- Charlotte Wickham: [https://github.com/cwickham/purrr-tutorial/blob/master/slides.pdf](https://github.com/cwickham/purrr-tutorial/blob/master/slides.pdf)
-- Julia Silge:[https://jennybc.github.io/purrr-tutorial/index.html](https://jennybc.github.io/purrr-tutorial/index.html)
-
